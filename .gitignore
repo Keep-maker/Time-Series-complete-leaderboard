@@ -1,20 +1,6 @@
-# dependencies
-node_modules/
-
-# build output
-.vercel/
-.tanstack/
-dist/
-.output/
-
-# local tool state
-.grok/
-artifacts/
-.node_modules.lock
-
-# env / logs
-.env
-.env.*
-*.log
+node_modules
+dist
 .DS_Store
-Thumbs.db
+*.local
+.vite
+*.log

@@ -1,28 +1,19 @@
-# syntax=docker/dockerfile:1
+FROM node:22-alpine AS build
 
-# Use an official Node runtime as the base image
-FROM node:22-slim
+WORKDIR /app
 
-# Set the working directory inside the container
-WORKDIR /workspace
+COPY package.json package-lock.json ./
+RUN npm ci
 
-# Copy package manifests first to leverage Docker layer caching
-COPY package*.json ./
+COPY index.html vite.config.ts tsconfig.json tsconfig.node.json ./
+COPY public ./public
+COPY src ./src
 
-# Install dependencies (package-lock.json may be slightly out of sync, so use npm install)
-RUN npm install
-
-# Copy the rest of the application source
-COPY . .
-
-# Build a production bundle. Running the Vite dev server previously meant the
-# first visitor paid for on-demand compilation of ~130 dev modules (30-60s),
-# during which React had not hydrated and all buttons were dead. `vite build`
-# pre-compiles everything into a handful of static assets instead.
 RUN npm run build
 
-# The preview server listens on 8080 (overridden from the 127.0.0.1:8081 the
-# workspace's preview script pins; CLI flags take precedence over the config)
-EXPOSE 8080
+FROM nginx:1.27-alpine
 
-CMD ["npx", "vite", "preview", "--host", "0.0.0.0", "--port", "8080"]
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/dist /usr/share/nginx/html
+
+EXPOSE 80

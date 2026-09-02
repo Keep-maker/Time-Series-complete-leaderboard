@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-display: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-fg);
+  --color-border: var(--border);
+  --color-ring: var(--accent);
+  --color-best: var(--best);
+  --color-best-foreground: var(--best-fg);
+}
+
+html[data-theme="light"] {
+  --bg: #f4f3ee;
+  --surface: #fffcf7;
+  --surface-2: #ebe8e1;
+  --fg: #161714;
+  --muted: #5f615b;
+  --accent: #2a2c28;
+  --accent-fg: #f4f3ee;
+  --border: color-mix(in oklab, var(--fg) 14%, transparent);
+  --best: #1f6b52;
+  --best-fg: #f4f3ee;
+}
+
+html[data-theme="dark"] {
+  --bg: #0c0d0f;
+  --surface: #141518;
+  --surface-2: #1c1d21;
+  --fg: #ecece8;
+  --muted: #8b8d86;
+  --accent: #c5c9be;
+  --accent-fg: #0c0d0f;
+  --border: color-mix(in oklab, var(--fg) 12%, transparent);
+  --best: #3d9a7a;
+  --best-fg: #04140e;
+}
+
+html {
+  background: var(--bg);
+  color: var(--fg);
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100dvh;
+  margin: 0;
+  font-family: var(--font-sans);
+}
+
+button,
+[role="button"] {
+  cursor: pointer;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}

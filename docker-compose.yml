@@ -1,0 +1,8 @@
+services:
+  port82-frontend:
+    build: .
+    image: port82-frontend:latest
+    container_name: port82-frontend
+    restart: unless-stopped
+    ports:
+      - "82:80"

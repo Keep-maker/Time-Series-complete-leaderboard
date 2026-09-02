@@ -1,8 +1,10 @@
 node_modules
-.grok/preview.log
-.grok/preview.pid
-.vercel
-*.log
 dist
+docs
 .git
-.DS_Store
+.gitignore
+*.md
+.env
+.env.*
+.vite
+*.log
