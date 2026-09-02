@@ -36,6 +36,11 @@ import {
 } from "./lib/ranking";
 import { Badge, Chip } from "./components/ui";
 
+const CHART_COLORS = {
+  light: { best: "#1f6b52", grid: "#d8d6cf", muted: "#5f615b", alt: ["#6e736c", "#9aa194", "#5f615b", "#8b8d86"] as const },
+  dark: { best: "#3d9a7a", grid: "#2a2b30", muted: "#8b8d86", alt: ["#9aa194", "#6e736c", "#8b8d86", "#5f615b"] as const },
+} as const;
+
 function useTheme() {
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     const saved = localStorage.getItem("tsf-theme");
@@ -49,6 +54,7 @@ function useTheme() {
 
   return {
     theme,
+    colors: CHART_COLORS[theme],
     toggle: () => setTheme((t) => (t === "light" ? "dark" : "light")),
   };
 }
@@ -75,7 +81,7 @@ function ExternalLink({
 
 export default function App() {
   const [lang, setLang] = useState<Lang>("en");
-  const { theme, toggle } = useTheme();
+  const { theme, colors, toggle } = useTheme();
   const t = copy[lang];
 
   const [track, setTrack] = useState<TrackId>("multivariate");
@@ -249,7 +255,7 @@ export default function App() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl overflow-x-hidden px-4 pb-20 pt-10">
+      <main className="mx-auto max-w-6xl px-4 pb-20 pt-10">
         <div className="-mx-1 mb-8 flex gap-1 overflow-x-auto px-1 pb-1">
           {tracks.map((tr) => (
             <Chip
@@ -303,6 +309,7 @@ export default function App() {
           meta={meta}
           chartData={chartData}
           chartModels={chartModels}
+          chartColors={colors}
           matrixModels={matrixModels}
           showLargeNote={track === "large"}
         />
@@ -371,6 +378,7 @@ function BoardPanel(props: {
   };
   chartData: Record<string, string | number | null>[];
   chartModels: string[];
+  chartColors: (typeof CHART_COLORS)[keyof typeof CHART_COLORS];
   matrixModels: string[];
   showLargeNote: boolean;
 }) {
@@ -392,6 +400,7 @@ function BoardPanel(props: {
     meta,
     chartData,
     chartModels,
+    chartColors,
     matrixModels,
     showLargeNote,
   } = props;
@@ -515,12 +524,12 @@ function BoardPanel(props: {
       {chartData.length > 1 && (
         <div className="mt-8">
           <h3 className="text-sm font-medium">{t.horizonChart}</h3>
-          <div className="mt-3 h-56 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData}>
-                <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" />
-                <XAxis dataKey="horizon" stroke="var(--muted)" fontSize={12} />
-                <YAxis stroke="var(--muted)" fontSize={12} width={48} />
+          <div className="mt-3 h-56 w-full min-w-0">
+            <ResponsiveContainer width="100%" height={224} minWidth={0}>
+              <LineChart data={chartData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+                <CartesianGrid stroke={chartColors.grid} strokeDasharray="3 3" />
+                <XAxis dataKey="horizon" stroke={chartColors.muted} fontSize={12} />
+                <YAxis stroke={chartColors.muted} fontSize={12} width={48} />
                 <Tooltip
                   contentStyle={{
                     background: "var(--surface)",
@@ -533,13 +542,10 @@ function BoardPanel(props: {
                     key={m}
                     type="monotone"
                     dataKey={m}
-                    stroke={
-                      isOurs(m)
-                        ? "var(--best)"
-                        : ["#6e736c", "#9aa194", "#5f615b", "#8b8d86"][i % 4]
-                    }
+                    stroke={isOurs(m) ? chartColors.best : chartColors.alt[i % 4]}
                     strokeWidth={isOurs(m) ? 2.5 : 1.5}
                     dot={false}
+                    isAnimationActive={false}
                   />
                 ))}
               </LineChart>
