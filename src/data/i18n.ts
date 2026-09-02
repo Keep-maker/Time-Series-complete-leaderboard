@@ -45,7 +45,7 @@ export const copy: Record<Lang, Copy> = {
   },
   en: {
     brand: "TSF Ranking",
-    title: "Time Series complete leaderboard",
+    title: "Time Series Complete Leaderboard",
     sub: "Filled from the paper appendices and GitHub table figures: per-horizon scores, Monash metrics, and large-scale results. Lower is better.",
     paper: "Paper",
     code: "Code",

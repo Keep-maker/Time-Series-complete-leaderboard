@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { ArrowUpRight, Moon, Sun } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Moon, Sun } from "lucide-react";
 import {
   CartesianGrid,
   Line,
@@ -19,7 +19,6 @@ import {
 import {
   copy,
   datasetLabels,
-  links,
   tracks,
   type Lang,
   type TrackId,
@@ -34,7 +33,7 @@ import {
   modelNames,
   rankedRows,
 } from "./lib/ranking";
-import { Badge, Chip } from "./components/ui";
+import { Chip } from "./components/ui";
 
 const CHART_COLORS = {
   light: { best: "#1f6b52", grid: "#d8d6cf", muted: "#5f615b", alt: ["#6e736c", "#9aa194", "#5f615b", "#8b8d86"] as const },
@@ -61,22 +60,6 @@ function useTheme() {
 
 function datasetLabel(id: string, lang: Lang) {
   return datasetLabels[id]?.[lang] ?? id;
-}
-
-function ExternalLink({
-  href,
-  children,
-  className,
-}: {
-  href: string;
-  children: ReactNode;
-  className?: string;
-}) {
-  return (
-    <a href={href} target="_blank" rel="noreferrer" className={className}>
-      {children}
-    </a>
-  );
 }
 
 export default function App() {
@@ -238,19 +221,6 @@ export default function App() {
                 <Sun className="size-4" />
               )}
             </button>
-            <ExternalLink
-              href={links.arxiv}
-              className="hidden h-8 items-center gap-2 rounded-md px-3 text-xs text-muted hover:bg-surface hover:text-fg sm:inline-flex"
-            >
-              {t.paper} <ArrowUpRight className="size-3.5" />
-            </ExternalLink>
-            <ExternalLink
-              href={links.github}
-              className="inline-flex h-8 items-center gap-2 rounded-md border border-border bg-surface px-3 text-xs text-fg hover:bg-surface-2"
-            >
-              <span className="hidden sm:inline">{t.code}</span>
-              <ArrowUpRight className="size-3.5" />
-            </ExternalLink>
           </div>
         </div>
       </header>
@@ -499,12 +469,6 @@ function BoardPanel(props: {
                   </td>
                   <td className="py-2.5 pr-3">
                     <span className="font-medium">{row.model}</span>
-                    {row.ours && (
-                      <Badge ours>
-                        {t.hosted}
-                        {row.lookback ? ` · L=${row.lookback}` : ""}
-                      </Badge>
-                    )}
                   </td>
                   <td
                     className={clsx(

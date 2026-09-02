@@ -15,10 +15,12 @@ export default defineConfig(({ mode }) => {
     server: {
       host: "0.0.0.0",
       port: 8080,
+      allowedHosts: ["1xl23ns467895.vicp.fun"],
     },
     preview: {
       host: "0.0.0.0",
       port: 8080,
+      allowedHosts: ["1xl23ns467895.vicp.fun"],
     },
   };
 });
